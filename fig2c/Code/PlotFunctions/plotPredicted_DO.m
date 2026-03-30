@@ -1,0 +1,227 @@
+function [predicted] = plotPredicted_DO(subject,age,collated,voxID)
+% [predicted] = plotPredicted(collated, nVox, nScan)
+%
+% Plot a figure with two subplots that depicts the PREDICTED (dashed red)
+% vs. ACTUAL (grey) time course:
+% (1) Predicted vs. Actual time course of a specified voxel across all
+% scans (scans delineated with green vertical lines)
+% (2) Predicted vs. Actual time course of a specified voxel in a specified
+% scan (rests delineated with green vertical dotted lines)
+%
+% Inputs:
+%   collated        A structure containing all fitted pRF information as
+%                   as given by [collated] = estpRF(scan, seeds, hrf, opt)
+% Output:
+%   predicted       A structure containing information about the actual and
+%                   predicted time course of data estimated by the pRF 
+%                   model (see predictpRF.m for more information)
+%
+% Examples:
+% predicted = plotPredicted(collated);
+% plotPredicted(collated, 5, 1); % plot 5th voxel from the 1st scan
+
+% Written by Kelly Chang - July 25, 2016
+
+%% Load collated structure and set paths
+addpath(genpath('/Applications/freesurfer'));
+%% Extract predicted and actual time course
+predicted = predictpRF(collated, collated.scan);
+actual = cat(1, predicted.tc);
+pred = cat(1, predicted.pred);
+t = lengthOut(0, collated.scan(1).TR, size(actual,1));
+
+%% Find top 5 voxels tuned to low and high frequencies 
+% Create low and high freq band 
+lowband = [collated.scan.funcOf.x(1):collated.scan.funcOf.x(3)];
+highband = [collated.scan.funcOf.x(end-2):collated.scan.funcOf.x(end)];
+
+% sort collated structure by correlation value (high to low) 
+pRF_mat = struct2table(collated.pRF);
+collated_sorted = sortrows(pRF_mat,6,'descend');
+% collated_sorted( any(ismissing(collated_sorted),2), :) = [];
+
+% Find the IDs of voxels that have low and high freq mus 
+high_vox_logical = logical(table2array(collated_sorted(:,3)) >= highband(1) & table2array(collated_sorted(:,3)) <= highband(end) & ~isnan(table2array(collated_sorted(:,6))));
+high_vox = collated_sorted(high_vox_logical,1);
+high_vox_corr = collated_sorted(high_vox_logical,6);
+high_vox_mu = collated_sorted(high_vox_logical, 3);
+
+low_vox_logical = logical(table2array(collated_sorted(:,3)) >= lowband(1) & table2array(collated_sorted(:,3)) <= lowband(end) & ~isnan(table2array(collated_sorted(:,6))));
+low_vox = collated_sorted(low_vox_logical,1);
+low_vox_corr = collated_sorted(low_vox_logical,6);
+low_vox_mu = collated_sorted(low_vox_logical, 3);
+
+% Choose the top 3 best voxels
+num_vox = 3;
+best_high_vox = table2array(high_vox(1:num_vox,:));
+best_high_vox_corr = table2array(high_vox_corr(1:num_vox,:));
+best_high_vox_mu = table2array(high_vox_mu(1:num_vox,:));
+
+best_low_vox = table2array(low_vox(1:num_vox,:));
+best_low_vox_corr = table2array(low_vox_corr(1:num_vox,:));
+best_low_vox_mu = table2array(low_vox_mu(1:num_vox,:));
+
+% Create list of voxels to plot (high or low band)
+voxel_type = {best_high_vox,best_low_vox};
+voxel_type_mu = {best_high_vox_mu, best_low_vox_mu};
+voxel_type_corr = {best_high_vox_corr, best_low_vox_corr};
+
+freq_band_type = {'High', 'Low'};
+freq_band = {'(4000-8000 Hz)', '(88-177 Hz)'};
+%% Plot Predicted vs Actual 
+if nargin<=3
+    for v = 1:length(voxel_type)
+        f = figure();
+        f.Position = [100 100 400 400];
+        for i = 1:length(voxel_type{v})
+            ax = subplot(length(voxel_type{v}),1,i);
+            % Plot actual vs predicted
+            a = plot(t, zscore(actual(:,find(predicted.voxID==voxel_type{v}(i)))), 'Color', [0.75 0.75 0.75],'LineWidth',2);
+            hold on
+            p = plot(t, zscore(pred(:,find(predicted.voxID==voxel_type{v}(i)))), 'r--','LineWidth',2);
+
+             % Ensure 'a' and 'p' are scalar handles
+            a = a(1);  
+            p = p(1);
+            
+            % Include a legend
+            if i == 1
+                % lgd = legend([a,p], ["Actual Time Course", "pRF Predicted Time Course"]);
+                % lgd.FontSize= 6;
+            end
+            % Add labels
+            sgtitle(strcat('Best', {' '}, freq_band_type(v),' Freq Tuned Voxels', {' '}, freq_band(v)))
+            title(strcat('Voxel ID = ' , num2str(voxel_type{v}(i)), ', Mu = ' , ' ', num2str(voxel_type_mu{v}(i)),  ', Corr = ' , num2str(voxel_type_corr{v}(i))));
+            hold off
+            han = axes(f,'visible','off');
+            han.Title.Visible='on';
+            han.XLabel.Visible='on';
+            han.YLabel.Visible='on';
+            ylabel(han,'BOLD (Z-scored)');
+            xlabel(han,'Time (s)');
+            han.LineWidth = 1; 
+
+            % Set axis parameters
+           set(ax, 'box', 'off', 'tickdir', 'out', 'fontsize', 14,'LineWidth',1)
+           ylim(ax,[-2.5,3])
+           xlim(ax,[0,400])
+       
+           % % Change figure size
+           % width = 500;
+           % ht = 1000;
+           % 
+           % % Set the width and height properties (first two elements are position, which you can leave as is)
+           % f.Position(3:4) = [width, ht];
+            
+        end
+
+        % Save figure
+        cd(fullfile('/Volumes/gomez/data/tonotopy_game/processed',age,strcat("sess",subject),'TonotopyResults'))
+        saveas(gcf, strcat(collated.opt.roi,'_act_vs_pred_',string(lower(freq_band_type(v)))),'png')
+    end
+end
+
+%% Plot Predicted vs Actual for a Given Voxel 
+
+if nargin > 3
+
+    mu = extractfield(collated.pRF,'mu');
+    corr = extractfield(collated.pRF,'corr');
+
+    % Plot actual vs predicted
+    f = figure();
+    f.Position = [100 100 1500 500];
+
+    a=plot(t, zscore(actual(:,find(predicted.voxID==voxID))), 'Color', [0.75 0.75 0.75], 'LineWidth',5);
+    hold on
+    p=plot(t, zscore(pred(:,find(predicted.voxID==voxID))), 'Color',[238/255 93/255 65/255], 'LineWidth',5, 'LineStyle','--');
+    xlim([0,360])
+
+    % Include a legend
+    lgd = legend([a,p], ["Actual Time Course", "pRF Predicted Time Course"]);
+    % lgd.TextColor= 'w'; 
+    lgd.FontSize = 24; 
+    % lgd.Color = 'k'; 
+
+    % Set axis parameters 
+    ax = gca; 
+    ax.FontSize = 24; 
+    % ax.Color = 'k'; 
+    % ax.YAxis.Color = 'w';
+    % ax.XAxis.Color = 'w';
+    
+    
+    % Add labels
+    % title(strcat('Voxel ID = ' , num2str(voxID), ', Mu =  ' , ' ', num2str(mu(find(predicted.voxID==voxID))),  ', Corr =  ' , num2str(corr(find(predicted.voxID==voxID)))));
+    hold off
+    han = axes(f,'visible','off');
+    han.Title.Visible='on';
+    han.XLabel.Visible='on';
+    han.YLabel.Visible='on';
+    yl = ylabel(han,'BOLD (Z-scored)','Color','k','FontSize',24);
+    xl = xlabel(han,'Time(sec)','Color','k','FontSize',24);
+    xl.Position(2) = xl.Position(2) - 0.02; 
+ 
+    % Save figure
+    cd(fullfile('/Volumes/gomez/data/tonotopy_game/processed',age,strcat('sess',subject),'figures'))
+    pwd
+    saveas(gcf, strcat(collated.opt.roi,'_act_vs_pred_',num2str(voxID), 'new.png'))
+
+end
+
+% %% Plot predicted vs actual for best tuned voxel overall
+% 
+% f = figure();
+% % f.Position = [100 100 550 400];
+% % x0=10;
+% % y0=10;
+% % width=550;
+% % height=125;
+% % set(gcf,'position',[x0,y0,width,height])
+% 
+% a=plot(t, zscore(actual(:,find(predicted.voxID==voxID))), 'Color', [0.75 0.75 0.75], 'LineWidth',3);
+% hold on
+% p=plot(t, zscore(pred(:,find(predicted.voxID==voxID))), 'r--', 'LineWidth',3);
+% xlabel('Time (s)');
+% xlim([0 350])
+% ylabel('BOLD (z-scored)')
+% 
+% ax = gca;
+% set(ax,"FontSize",14)
+% gcf;
+% box off;
+% set(gca, 'tickdir', 'out')
+
+%% Plot a voxel with really low mu but high variance explained
+%
+% muvals = table2array(pRF_mat(:,3));
+% corrvals = table2array(pRF_mat(:,6));
+% voxID = table2array(pRF_mat(:,1));
+% 
+% low_mu_high_corr = voxID(find(muvals < 88 & corrvals>0.8)); 
+% mu_lmhc = muvals(find(muvals < 88 & corrvals>0.8)); 
+% corr_lmhc = corrvals(find(muvals < 88 & corrvals>0.8)); 
+% 
+% % Plot 3 of these voxels
+% f = figure(); 
+% for i=1:3
+%     subplot(3,1,i)
+%     a = plot(t,zscore(actual(:,find(predicted.voxID==low_mu_high_corr(i)))), 'Color', [0.75 0.75 0.75]);
+%     hold on;
+%     p = plot(t, zscore(pred(:,find(predicted.voxID==low_mu_high_corr(i)))), 'r--');
+% 
+%     % Add labels
+%     sgtitle('Low mu (< 88 Hz) high corr ( > 0.8) Voxels')
+%     title(strcat('Voxel ID = ' , num2str(low_mu_high_corr(i)), ', Mu = ' , ' ', num2str(mu_lmhc(i)),  ', Corr = ' , num2str(corr_lmhc(i))));
+%     hold off
+%     han = axes(f,'visible','off');
+%     han.Title.Visible='on';
+%     han.XLabel.Visible='on';
+%     han.YLabel.Visible='on';
+%     ylabel(han,'BOLD (Z-scored)');
+%     xlabel(han,'Time(s)');
+% end
+
+% close all
+end
+

@@ -1,0 +1,55 @@
+
+%% This script plots the actual and predicted time course of a PAC voxel in an example adult and child
+cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig2c")
+ages = ["adults","kids"];
+%% Loop through adult and child example participant
+for a = 1:length(ages)
+    % collated = collated_all{c};
+    age = ages(a);
+    freq_band_type = {'High', 'Low'};
+    freq_band = {'(4000-8000 Hz)', '(88-177 Hz)'};
+
+    %% Plot Predicted vs Actual
+    f = figure();
+    f.Position = [100 100 500 500];
+    for i = 1:length(voxel_type{v})
+        ax = subplot(3,1,i);
+        
+        % Plot actual vs predicted
+        cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig2c")
+        load(sprintf("%s_vox_%i.mat",age,i))
+        
+        copyobj(a, ax)              
+        hold on; 
+        copyobj(p, ax)              
+
+        % Include a legend
+        if i == 1
+            lgd = legend(["Actual Time Course", "pRF Predicted Time Course"]);
+            lgd.FontSize= 6;
+        end
+        % Add labels
+        % sgtitle(strcat('Best', {' '}, freq_band_type(v),' Freq Tuned Voxels', {' '}, freq_band(v)))
+        % title(strcat('Voxel ID = ' , num2str(voxel_type{v}(i)), ', Mu = ' , ' ', num2str(voxel_type_mu{v}(i)),  ', Corr = ' , num2str(voxel_type_corr{v}(i))),'FontSize',10);
+        % hold off
+        age_char = char(age);
+        title(sprintf("Example %s"),age_char(:end-1))
+        han = axes(f,'visible','off');
+        han.Title.Visible='on';
+        han.XLabel.Visible='on';
+        han.YLabel.Visible='on';
+        ylabel(han,'BOLD (Z-scored)');
+        xlabel(han,'Time (s)');
+        han.LineWidth = 1;
+
+        % Set axis parameters
+        set(ax, 'box', 'off', 'tickdir', 'out', 'fontsize', 14,'LineWidth',1)
+        ylim(ax,[-2.5,3])
+        xlim(ax,[0,400])
+
+
+
+    end
+end
+
+
