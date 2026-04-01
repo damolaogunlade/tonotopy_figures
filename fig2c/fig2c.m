@@ -1,7 +1,8 @@
 
 %% This script plots the actual and predicted time course of a PAC voxel in an example adult and child
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig2c")
+
 ages = ["adults","kids"];
+
 %% Loop through adult and child example participant
 for a = 1:length(ages)
     % collated = collated_all{c};
@@ -16,7 +17,6 @@ for a = 1:length(ages)
         ax = subplot(3,1,i);
         
         % Plot actual vs predicted
-        cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig2c")
         load(sprintf("%s_vox_%i.mat",age,i))
         
         copyobj(a, ax)              
@@ -46,8 +46,6 @@ for a = 1:length(ages)
         set(ax, 'box', 'off', 'tickdir', 'out', 'fontsize', 14,'LineWidth',1)
         ylim(ax,[-2.5,3])
         xlim(ax,[0,400])
-
-
 
     end
 end
