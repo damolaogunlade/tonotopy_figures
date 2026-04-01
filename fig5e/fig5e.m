@@ -1,14 +1,11 @@
 %% This script plots mu in the novel map in adults and children
 
 % Load plotting colors
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig5e")
 load("plotting_colors.mat")
 
 % Load mu data 
 load("adults_mu.mat")
 load("kids_mu.mat")
-
-% Plot mu 
 
 % Average values across hemispheres
 adults_mu = (adults_mu_left + adults_mu_right) / 2;
