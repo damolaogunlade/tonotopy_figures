@@ -1,6 +1,6 @@
-% This script plots surface area of the primary core in adults and children
+% This script plots surface area of the novel tonotopic map in adults and children
 
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig5d")
+% Load plotting colors 
 load("plotting_colors.mat")
 
 % Load surface area data for kids and adults
