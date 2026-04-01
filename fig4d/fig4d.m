@@ -1,7 +1,6 @@
 %% Plot cochleotopic coverage (averaged across hemispheres)
 
 % Load data
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig4d")
 label = "pac"; 
 load(sprintf("%s_cochleotopy_avg_across_hemis.mat",label),"cochleotopy_adults","cochleotopy_kids")
 
