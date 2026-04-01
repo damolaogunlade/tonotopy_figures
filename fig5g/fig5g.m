@@ -2,7 +2,6 @@
 %% This script plots mu vs sigma in the novel map of adults and children 
 
 % Load plotting colors 
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig5g")
 load("plotting_colors.mat")
 colors = [adult_colors(2,:);adult_colors(5,:)]; 
 
