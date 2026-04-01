@@ -5,7 +5,6 @@ frequencies = ["150 Hz", "2000 Hz","4000 Hz"];
 conditions = ["150 Hz Flat", "150 Hz Notched", "2000 Hz Flat", "2000 Hz Notched", "4000 Hz Flat", "4000 Hz Notched"];
 
 % Load adult thresholds
-cd('/Volumes/gomez/data/tonotopy_game/code/figures_code/fig1e')
 load("adults_avg_thresh.mat")
 
 % Plot adult thresholds
@@ -52,7 +51,6 @@ ht = 275;
 fig.Position(3:4) = [width, ht];
 
 % Load kid data
-cd('/Volumes/gomez/data/tonotopy_game/code/figures_code/fig1e')
 load("kids_avg_thresh.mat")
 
 % Calculate mean and standard error of mean
