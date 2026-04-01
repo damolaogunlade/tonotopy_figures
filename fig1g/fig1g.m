@@ -1,7 +1,6 @@
 %% This script plots the 4000 Hz - 150 Hz notch benefit difference in adults vs children 
 
 % Load adult data  
-cd('/Volumes/gomez/data/tonotopy_game/code/figures_code/fig1e')
 load("adults_avg_thresh.mat","avg_thresh");
 adults_avg_thresh = avg_thresh;
 
