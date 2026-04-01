@@ -1,7 +1,6 @@
 %% This script plots sigma in the primary core in adults and children
 
 % Load plotting colors
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig4b")
 load("plotting_colors.mat")
 
 % Load variance explained data 
