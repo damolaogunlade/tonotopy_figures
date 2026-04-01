@@ -1,7 +1,6 @@
 %% This script plots variance explained in auditory ROI in adults and children
 
 % Load plotting colors
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig2d")
 load("plotting_colors.mat")
 
 % Load variance explained data 
