@@ -1,7 +1,6 @@
 %% This script plots example staircasing in adult and child
 
 % Load plotting colors
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig1d")
 load("plotting_colors.mat")
 
 % --- Adult ---
