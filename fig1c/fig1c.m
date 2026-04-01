@@ -1,7 +1,6 @@
 %% This script plots a spectrogram of an example 150 Hz notched condition trial
 
 % Load stimulus matrix 
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig1c")
 load("ex_stim.mat")
 
 % 3 AFC stimuli in first trial of 150 Hz Notched condition 
