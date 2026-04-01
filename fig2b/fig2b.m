@@ -1,3 +1,4 @@
+%% This script plots the stimulus image for pRF mapping 
 
 % Load stimulus image and paradigm files 
 cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig2b")
