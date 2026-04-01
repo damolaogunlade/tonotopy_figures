@@ -37,7 +37,6 @@ for i = 1:length(ages)
     age = ages(i);
 
     % Load data
-    cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig6")
     load(sprintf("%s_data.mat",age))
 
     % Plotting variables
@@ -175,9 +174,7 @@ for i = 1:length(ages)
 
     end
 
-
     %% Visualization
-
     % Set axes limits
     xlim([0,0.8])
     ylim([25,85])
