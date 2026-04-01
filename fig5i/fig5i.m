@@ -1,11 +1,7 @@
 %% This script determines the difference in cochleotopic coverage between PAC ...
 % and our novel tonotopic map in adults and children respectively 
 
-%% Load cochleotopic coverage data
-
-
 % Load plotting colors
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig5i")
 load("plotting_colors.mat")
 
 % Load data from PAC
@@ -19,7 +15,6 @@ tono_1_cochleotopy_adults = cochleotopy_adults;
 tono_1_cochleotopy_kids = cochleotopy_kids; 
 
 % Determine difference in cochleotopic coverage 
-
 % plot_cochlea_spiral expects descending values so flip data 
 pac_cochleotopy_adults_flip = fliplr(pac_cochleotopy_adults);
 tono_1_cochleotopy_adults_flip = fliplr(tono_1_cochleotopy_adults);
@@ -34,15 +29,11 @@ custom_colormap_diff = interpolateColorMap(adult_colors(1:6,:));
 
 % Adults
 plothand_pac_tono_1_diff = plot_cochlea_spiral2(mean(pac_cochleotopy_adults_flip)-mean(tono_1_cochleotopy_adults_flip), custom_colormap_diff);
-cd("/Volumes/gomez/data/tonotopy_game/code/cochlea_plotter")
 exportgraphics(plothand_pac_tono_1_diff, 'figure_adult-pac_minus-tono_1_coverage.jpeg', 'Resolution', 300, Units="pixels", Padding=50);
 
 % Kids
 plothand_pac_tono_1_diff = plot_cochlea_spiral2(mean(pac_cochleotopy_kids_flip)-mean(tono_1_cochleotopy_kids_flip), custom_colormap_diff);
-cd("/Volumes/gomez/data/tonotopy_game/code/cochlea_plotter")
 exportgraphics(plothand_pac_tono_1_diff, 'figure_kid-pac_minus-tono_1_coverage.jpeg', 'Resolution', 300, Units="pixels", Padding=50);
-
-%% Perform ANOVA to test for significant differences in cochleotopic coverage between PAC and novel map (separately for adults and kids)  
 
 % Plot adult pac - novel map cochleotopic coverage 
 f=figure;
