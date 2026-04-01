@@ -1,7 +1,6 @@
 %% This script plots sigma in the novel map in adults and children
 
 % Load plotting colors
-cd("/Volumes/gomez/data/tonotopy_game/code/figures_code/fig5f")
 load("plotting_colors.mat")
 
 % Load variance explained data 
