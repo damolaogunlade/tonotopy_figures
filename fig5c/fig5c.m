@@ -14,7 +14,7 @@ sprintf("kids rh hit rate = %0.2f%%",rh_kids_hitRate )
 f = figure;
 load("plotting_colors.mat")
 % colors = [0.1176 0.3059 0.4745; 0.9608 0.3451 0.3059];
-b = bar(["LH","RH"],[lh_adults_hitRate, rh_adults_hitRate; lh_kids_hitRate, rh_kids_hitRate]/100');
+b = bar(["LH","RH"],[lh_adults_hitRate, lh_kids_hitRate; rh_adults_hitRate, rh_kids_hitRate]/100');
 b(1).FaceColor = adult_colors(1,:);
 b(1).FaceAlpha = 1;
 b(2).FaceColor = kid_colors(1,:);
