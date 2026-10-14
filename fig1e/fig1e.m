@@ -4,8 +4,15 @@
 frequencies = ["150 Hz", "2000 Hz","4000 Hz"];
 conditions = ["150 Hz Flat", "150 Hz Notched", "2000 Hz Flat", "2000 Hz Notched", "4000 Hz Flat", "4000 Hz Notched"];
 
+% Load plotting colors
+load("plotting_colors.mat")
+
 % Load adult thresholds
-load("adults_avg_thresh.mat")
+% cd('/Volumes/gomez/data/tonotopy_game/code/figures_code/fig1e')
+cd('/Users/oo9037/Documents/figures_code_updated_102026/fig1e')
+load("adults_data.mat","avg_thresh_table")
+adults_data = avg_thresh_table;
+adults_avg_thresh = table2array(adults_data(:,3:end));
 
 % Plot adult thresholds
 fig = openfig("adults_group_avg_masked_thresh.fig");
@@ -51,14 +58,17 @@ ht = 275;
 fig.Position(3:4) = [width, ht];
 
 % Load kid data
-load("kids_avg_thresh.mat")
+cd('/Users/oo9037/Documents/figures_code_updated_102026/fig1e')
+load("kids_data.mat","avg_thresh_table")
+kids_data = avg_thresh_table;
+kids_avg_thresh = table2array(kids_data(:,3:end));
 
 % Calculate mean and standard error of mean
-sem_thresh = std(avg_thresh,"omitmissing")/sqrt(size(avg_thresh,1));
-mean_thresh = mean(avg_thresh,1,"omitnan");
+sem_thresh = std(kids_avg_thresh,"omitmissing")/sqrt(size(kids_avg_thresh,1));
+mean_thresh = mean(kids_avg_thresh,1,"omitnan");
 
 % Initialize matrix to hold different frequencies for plotting purposes
-freq_mat = repelem([150;2000;4000],1,height(avg_thresh));
+freq_mat = repelem([150;2000;4000],1,height(kids_avg_thresh));
 freq_mat = freq_mat';
 
 % Plot flat condition thresholds (kids)
@@ -70,7 +80,11 @@ shadedErrorBar(freq_mat(1,:),mean_thresh([2,4,6]),sem_thresh([2,4,6]),'lineProps
 hold on;
 
 % Add legend
-legend("Flat Spectrum - Adults","Notched Spectrum - Adults","Flat Spectrum - Kids","Notched Spectrum - Kids","FontSize",5)
+legend(sprintf("Adults (n = %i) Flat Spectrum", height(adults_data)),...
+    sprintf("Adults (n = %i) Notched Spectrum" ,height(adults_data)),...
+    sprintf("Kids (n = %i) Flat Spectrum" ,height(kids_data)),...
+    sprintf("Kids (n = %i) Notched Spectrum" ,height(kids_data)),...
+    "FontSize",5)
 
 
 

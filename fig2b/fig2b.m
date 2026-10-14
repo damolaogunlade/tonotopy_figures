@@ -1,4 +1,3 @@
-%% This script plots the stimulus image for pRF mapping 
 
 % Load stimulus image and paradigm files 
 load("tones.mat")
