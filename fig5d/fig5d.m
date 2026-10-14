@@ -1,36 +1,42 @@
-% This script plots surface area of the novel tonotopic map in adults and children
+%% Plot cochleotopic coverage (averaged across hemispheres)
 
-% Load plotting colors 
+% Load data
+label = "core"; 
+load(sprintf("%s_cochleotopy_avg_across_hemis.mat",label),"cochleotopy_adults","cochleotopy_kids")
+cochleotopy_adults = rmmissing(cochleotopy_adults);
+cochleotopy_kids = rmmissing(cochleotopy_kids);
+
+% Load plotting colors
 load("plotting_colors.mat")
 
-% Load surface area data for kids and adults
-load("tono_1_sa.mat")
-
-% Plot surface area 
-
-% Combine into array
-values = [kids_sa, adults_sa]';
-
-% Age grouping
-cats = [ ...
-    repmat("Children",numel(kids_sa),1);
-    repmat("Adults",numel(adults_sa),1)];
-
-% Plot
-color_idx = 3; 
-colors = {[adult_colors(color_idx,:); kid_colors(color_idx,:)]};
-violinplot(values, cats,"ViolinColor",colors,"ShowData",true,"ViolinAlpha",{0.5 0.5});
-% ylabel("Surface Area (mm^2)")
-% title(sprintf("%s Surface Area",roi))
-box on
+% Plot the average cochleotopic coverage plot in adults vs kids (both
+% hemispheres)
+f=figure;
+freqs = [88	125	150 177	250	354	500	707	1000	1414	2000	2828	4000	5657	8000];
+shadedErrorBar(freqs, cochleotopy_adults, {@mean,@std}, ...
+    'lineProps', {'-', 'Color', adult_colors(5,:), 'LineWidth', 2}, ...
+    'patchSaturation', 0.5);
+hold on;
+shadedErrorBar(freqs, cochleotopy_kids, {@mean,@std}, ...
+    'lineProps', {'-', 'Color', adult_colors(7,:), 'LineWidth', 2}, ...
+    'patchSaturation', 0.5);
+% ylabel('Average Probability density','FontSize',16)
+% xlabel('Frequency (Hz)','FontSize',16)
+% title(sprintf('%s Cochleotopic Coverage Group Average',label),'Interpreter','none','FontSize',16)
+% legend(sprintf("Adults (n = %i)",num_subs(1)),sprintf("Children (n = %i)", num_subs(2)))
 legend off
-
-% Formatting
-ax = gca; 
-set(ax,"FontSize",14,"FontName","Arial",'Tickdir','out','LineWidth',1)
+freqs_plot = [88	125	177	250	354	500	707	1000	1414	2000	2828	4000	5657	8000];
+xlim([0,freqs_plot(end)])
+ylim([0,0.65])
+yticks([0.2 0.4 0.6])
+xticks(freqs_plot)
+set(gca, 'XScale', 'log')
 box off
+ax = gca;
+ax.FontSize = 14;
+set(gca,'TickDir','out','LineWidth',1);
+set(gca,'XMinorTick','off')
+ax.XAxis.FontSize = 10;
 
 % Adjust figure size
-f = gcf; 
-f.Position(3:4) = [340,325];
-
+f.Position(3:4) = [800,400];
