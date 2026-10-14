@@ -37,5 +37,4 @@ set(gca,'XMinorTick','off')
 ax.XAxis.FontSize = 10;
 
 % Adjust figure size
-% f.Position(3:4) = [600,400]; %PAC
 f.Position(3:4) = [800,400];

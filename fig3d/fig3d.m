@@ -1,6 +1,4 @@
 % This script plots surface area of the primary core in adults and children
-
-% Load plotting colors
 load("plotting_colors.mat")
 
 % Load surface area data for kids and adults

@@ -1,11 +1,17 @@
-%% This script plots mu in the primary core in adults and children
-
-% Load plotting colors
-load("plotting_colors.mat")
+%% This script plots mu in the HG in adults and children
 
 % Load mu data 
-load("adults_mu.mat")
-load("kids_mu.mat")
+load("hg_mu.mat")
+
+adults_mu_left = data_mu.adults_mu_left; 
+adults_mu_left = adults_mu_left(~isnan(adults_mu_left)); 
+adults_mu_right = data_mu.adults_mu_right; 
+adults_mu_right = adults_mu_right(~isnan(adults_mu_right)); 
+kids_mu_left = data_mu.kids_mu_left; 
+kids_mu_left = kids_mu_left(~isnan(kids_mu_left));
+kids_mu_right = data_mu.kids_mu_right;
+kids_mu_right = kids_mu_right(~isnan(kids_mu_right));
+
 
 % Plot mu 
 
@@ -20,7 +26,7 @@ cats = [repmat("Adults", numel(adults_mu),1);
 
 % Plot
 color_idx = 4;
-colors = {[adult_colors(color_idx,:); kid_colors(color_idx,:)]};
+colors = {[adult_colors(2,:); [63 186 178]/255]}; % kids color is now teal
 f = figure;
 violinplot(values, cats,"ViolinColor",colors,"ShowData",true,"ViolinAlpha",{0.5 0.5});
 % title(sprintf('%s Average Preferred Frequency',roi),'Interpreter','none')

@@ -1,15 +1,18 @@
 
-%% This script plots mu vs sigma in the primary core of adults and children 
+%% This script plots mu vs sigma in the HG of adults and children 
 
-% Load plotting colors 
 load("plotting_colors.mat")
-colors = [adult_colors(2,:);adult_colors(5,:)]; 
+colors = [adult_colors(2,:); [53, 156, 149]/255]; % kids color is now more like a teal
 
 % Load surface area data for kids and adults
 load("adults_muVsSigma.mat");
 adults_mu_vs_sigma = group_sigma;
 load("kids_muVsSigma.mat");
 kids_mu_vs_sigma = group_sigma; 
+
+% Frequencies to plot 
+freqs = [88 125	150 177	250	354	500	707	1000	1414	2000	2828	4000];
+new_freqs = [freqs, round(freqs(end)*sqrt(2)),freqs(end)*2];
 
 % Plot
 shadedErrorBar(new_freqs, adults_mu_vs_sigma, {@mean,@std}, ...

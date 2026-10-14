@@ -1,4 +1,4 @@
-%% This script plots cochleotopic coverage of PAC on the cochlea 
+%% This script plots cochleotopic coverage of HG on the cochlea 
 
 % First row is adults
 load('pac_cochleotopy_matrix.mat')
@@ -24,4 +24,5 @@ plothandle_k = plot_cochlea_spiral2(data(2,:), custom_colormap);
 % This uses a special function so if you enter 'diff' for the colormap name
 % it will use a perceptually linear divergent colormap from colorbrewer
 % that is produced from the lbmap.mm function
+custom_colormap_diff = "diff"; 
 plothand_d = plot_cochlea_spiral2(data(1,:)-data(2,:), custom_colormap_diff);
